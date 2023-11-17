@@ -1,92 +1,42 @@
 // Subcategories.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
+import { View, TouchableOpacity, Image,FlatList,Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Subcategories = ({ route, navigation }) => {
-  const { selectedCategory } = route.params;
-  const [subcategories, setSubcategories] = useState([]);
-  const getAllItems = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      const items = await AsyncStorage.multiGet(keys);
-  
-      // items dizisi, [key, value] çiftlerini içerir
-      console.log('All items in AsyncStorage:', items);
-    } catch (error) {
-      console.error('Error getting all items from AsyncStorage:', error);
-    }
-  };
-  const addToCart = async (item) => {
-  try {
-    const existingCart = await AsyncStorage.getItem('cart');
-    let cart = existingCart ? JSON.parse(existingCart) : [];
-
-    const isAlreadyAdded = cart.some((cartItem) => cartItem.id === item.id);
-    if (!isAlreadyAdded) {
-      cart.push(item);
-      getAllItems();
-      await AsyncStorage.setItem('cart', JSON.stringify(cart));
-      console.log('Item added to cart:', item);
-    } else {
-      console.log('Item is already in the cart:', item);
-    }
-  } catch (error) {
-    console.error('Error adding to cart:', error);
-  }
-};
-
-  
-  const fetchSubcategories = async (parentId) => {
-    try {
-      const response = await fetch(
-        `https://apiv5.akilliticaretim.com/api/v5/ad/product/categories?parentId=${parentId}`,
-        {
-          method: 'GET',
-          headers: {
-            'GUID': '24BE-DB0E-D75E-4060',
-          },
-        }
-      );
-
-      const result = await response.json();
-
-      if (result.status) {
-        return result.data.categories;
-      } else {
-        console.error('API Error:', result);
-        return [];
-      }
-    } catch (error) {
-      console.error('API Error:', error);
-      return [];
-    }
-  };
+const Subcategories = () => {
+  const navigation = useNavigation();
+  const [subcategories, setCategories] = useState([]);
 
   useEffect(() => {
-    const fetchSubcategoriesAndSet = async () => {
-      const subcategories = await fetchSubcategories(selectedCategory.id);
-      setSubcategories(subcategories);
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          'https://apiv5.akilliticaretim.com/api/v5/ad/product/categories?parentId=70',
+          {
+            method: 'GET',
+            headers: {
+              'GUID': '24BE-DB0E-D75E-4060',
+            },
+          }
+        );
+
+        const result = await response.json();
+
+        if (result.status) {
+          setCategories(result.data.categories);
+        } else {
+          console.error('API Error:', result);
+        }
+      } catch (error) {
+        console.error('API Error:', error);
+      }
     };
 
-    fetchSubcategoriesAndSet();
-  }, [selectedCategory]);
-
-  const handleSubcategoryPress = async (subcategory) => {
-    try {
-      await addToCart(subcategory);
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
-  };
-  const handleCartPress = async (subcategory) => {
-    console.log('-----------', JSON.stringify(subcategory));
-    navigation.navigate('Cart', { selectedCategory: subcategory });
-  };
-  
+    fetchCategories();
+  }, []);
   const renderSubcategoryItem = ({ item }) => (
-    <TouchableOpacity style={styles.verticalButton} onPress={() => handleSubcategoryPress(item)}>
+    <TouchableOpacity style={styles.verticalButton} onPress={() => handleSubCategoryPress(item)}>
       <Image
         source={{ uri: item.imagePath.imagePath }}
         style={styles.ImageCategory}
@@ -96,10 +46,49 @@ const Subcategories = ({ route, navigation }) => {
       </View>
     </TouchableOpacity>
   );
+  const menuButton = () => {
+    navigation.navigate('Menu');
+  };
 
+  const notificationButton = () => {
+    console.log('notificationButton');
+  };
+
+  const locationButton = () => {
+    console.log('locationButton');
+  };
+  const handleSubCategoryPress = (category) => {
+    navigation.navigate('Products', { selectedProduct: category });
+  };
+  const handleCartPress = () => {
+    navigation.navigate('Cart');
+  };
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.container}>
+      {/* Upper Row */}
+      <View style={styles.upperRow}>
+        {/* Menu Button */}
+        <TouchableOpacity onPress={menuButton}>
+          <Image source={require('../assets/menuIcon.png')} style={styles.icon} />
+        </TouchableOpacity>
+
+        {/* Logo */}
+        <Image source={require('../assets/Logo.png')} style={styles.logo} />
+
+        {/* Location Button */}
+        <TouchableOpacity onPress={locationButton}>
+          <Image source={require('../assets/location.png')} style={styles.icon} />
+        </TouchableOpacity>
+
+        {/* Notification Button */}
+        <TouchableOpacity onPress={notificationButton}>
+          <Image source={require('../assets/notification.png')} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
+      
+    
+      
+      {/* Cart */}
         <FlatList
           contentContainerStyle={{
             justifyContent: 'flex-start',
@@ -112,12 +101,11 @@ const Subcategories = ({ route, navigation }) => {
             item.id ? item.categoryName.toString() : Math.random().toString()
           }
         />
-      </View>
       {/* Cart */}
       <View style={styles.cartContainer}>
         <TouchableOpacity
           style={styles.bottomButton}
-          onPress={() => handleCartPress(selectedCategory)}
+          onPress={() => handleCartPress()}
         >
           <Image source={require('../assets/cart.png')} style={styles.icon} />
         </TouchableOpacity>

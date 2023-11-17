@@ -7,6 +7,7 @@ import HomeScreen from "./src/HomeScreen";
 import MenuScreen from "./src/MenuScreen";
 import ShoppingCart from "./src/ShoppingCart";
 import Subcategories from "./src/Subcategories";
+import Products from "./src/Products";
 
 const Stack = createStackNavigator();
 
@@ -16,7 +17,8 @@ const App = () => {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Products" component={Subcategories} />
+        <Stack.Screen name="SubCategory" component={Subcategories} />
+        <Stack.Screen name="Products" component={Products} />
         <Stack.Screen name="Cart" component={ShoppingCart} />
         <Stack.Screen name="Menu" component={MenuScreen} />
       </Stack.Navigator>

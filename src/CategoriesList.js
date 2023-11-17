@@ -37,7 +37,7 @@ const CategoriesList = () => {
   }, []);
 
   const handleCategoryPress = (category) => {
-    navigation.navigate('Products', {
+    navigation.navigate('SubCategory', {
       selectedCategory: category,
     });
   };

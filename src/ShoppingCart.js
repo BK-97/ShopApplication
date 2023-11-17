@@ -1,48 +1,57 @@
 // ShoppingCart.js
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "./styles";
 
 const ShoppingCart = () => {
   const [addedItems, setAddedItems] = useState([]);
+
   const removeFromCart = async (itemId) => {
     try {
       const existingCart = await AsyncStorage.getItem("cart");
       let cart = existingCart ? JSON.parse(existingCart) : [];
 
+      // Filtreleme işlemi ile seçilen öğeyi kaldır
       cart = cart.filter((item) => item.id !== itemId);
 
+      // Güncellenmiş sepeti AsyncStorage'e geri yaz
       await AsyncStorage.setItem("cart", JSON.stringify(cart));
 
       console.log("Item removed from cart. Updated cart:", cart);
 
+      // Güncellenmiş sepeti state'e set et
       setAddedItems(cart);
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
   };
+
+  const BuyButton = () => {
+    // Sepeti tamamen temizle
+    AsyncStorage.clear();
+    // Güncellenmiş sepeti state'e set et
+    setAddedItems([]);
+  };
+
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
         const existingCart = await AsyncStorage.getItem("cart");
         const cart = existingCart ? JSON.parse(existingCart) : [];
+        
+        // Sepet öğelerini state'e set et
         setAddedItems(cart);
-  
+
         console.log("Fetched cart items:", cart); // Debug için eklendi
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
     };
-  
+
+    // Component ilk render olduğunda sepet öğelerini çek
     fetchCartItems();
   }, []);
-  
 
   return (
     <View style={styles.container}>
@@ -51,10 +60,10 @@ const ShoppingCart = () => {
       {addedItems.length > 0 ? (
         <FlatList
           data={addedItems}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()} // keyExtractor'ı düzelt
           renderItem={({ item }) => (
             <View style={styles.cartItem}>
-              <Text style={styles.buttonTextStyle}>{item.categoryName}</Text>
+              <Text style={styles.buttonTextStyle}>{item.stockName}</Text>
               <Text style={styles.buttonTextStyle}>{item.price} TL</Text>
               <TouchableOpacity onPress={() => removeFromCart(item.id)}>
                 <Text style={styles.buttonTextStyle}>Remove from Cart</Text>
@@ -73,7 +82,10 @@ const ShoppingCart = () => {
               Total: {calculateTotal(addedItems)} TL
             </Text>
             {/* Checkout işlemi buraya eklenebilir */}
-            <TouchableOpacity style={styles.checkoutButton}>
+            <TouchableOpacity 
+              onPress={BuyButton}
+              style={styles.checkoutButton} 
+            >
               <Text style={styles.checkoutText}>Checkout</Text>
             </TouchableOpacity>
           </>
