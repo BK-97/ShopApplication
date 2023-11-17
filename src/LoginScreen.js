@@ -1,6 +1,8 @@
 // LoginScreen.js
+
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('destek@akilliticaret.com');
@@ -23,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
       const result = await response.json();
 
       if (result.status) {
+        await AsyncStorage.setItem('accessToken', result.data.accessToken);
         navigation.navigate('Home');
       } else {
         Alert.alert('Login Failed.');

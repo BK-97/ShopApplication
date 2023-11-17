@@ -7,44 +7,75 @@ import { styles } from "./styles";
 const ShoppingCart = () => {
   const [addedItems, setAddedItems] = useState([]);
 
-  const removeFromCart = async (itemId) => {
+  const fetchCartItemsFromApi = async () => {
     try {
-      const existingCart = await AsyncStorage.getItem("cart");
-      let cart = existingCart ? JSON.parse(existingCart) : [];
+      const apiUrl = 'https://apiv5.akilliticaretim.com/api/v5/sf/cart/cart-v2';
+    
+      const headers = {
+        'GUID': '24BE-DB0E-D75E-4060',
+        'Authorization': 'Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0OGZiMTFkYS1lZmFjLTRmZmUtOTZmNS04N2ExMjY2NzEwZDkiLCJ1c2VyaWQiOiIxMjM2MCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJndWlkIjoiMjRCRS1EQjBFLUQ3NUUtNDA2MCIsImV4cCI6MTY5OTg2OTAyOSwiaXNzIjoiaHR0cHM6Ly93d3cuYWtpbGxpdGljYXJldC5jb20vIiwiYXVkIjoiaHR0cHM6Ly93d3cuYWtpbGxpdGljYXJldC5jb20vIn0.Q9jVNhfWInn2ukad-xzV0_1xNKThjxLQ1n1TC4C7tjs',
+      };
+  
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: headers,
+      });
+  
+      console.log("API Response Data:", response);
 
-      cart = cart.filter((item) => item.id !== itemId);
-
-      await AsyncStorage.setItem("cart", JSON.stringify(cart));
-
-      console.log("Item removed from cart. Updated cart:", cart);
-
-      setAddedItems(cart);
+      if (response.ok) {
+        const responseData = await response.json();
+  
+        if (responseData && responseData.status === true) {
+          return responseData.data.items; 
+        } else {
+          console.error('Error fetching cart from API:', responseData);
+          return [];
+        }
+      } else {
+        console.error('HTTP Error:', response.statusText);
+        return [];
+      }
     } catch (error) {
-      console.error("Error removing item from cart:", error);
+      console.error('API error while fetching cart:', error);
+      return [];
+    }
+  };
+  
+  
+
+  const removeFromCart = async (productId) => {
+    try {
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
     }
   };
 
-  const BuyButton = () => {
-    AsyncStorage.clear();
-    setAddedItems([]);
+  const BuyButton = async () => {
+    try {
+      AsyncStorage.clear();
+      setAddedItems([]);
+    } catch (error) {
+      console.error('Error during checkout:', error);
+    }
   };
 
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const existingCart = await AsyncStorage.getItem("cart");
-        const cart = existingCart ? JSON.parse(existingCart) : [];
+        const cartItems = await fetchCartItemsFromApi();
         
-        setAddedItems(cart);
-
-        console.log("Fetched cart items:", cart);
+        setAddedItems(cartItems);
+  
+        console.log("Fetched cart items from API:", cartItems);
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
     };
-
+  
     fetchCartItems();
   }, []);
+  
 
   return (
     <View style={styles.container}>
