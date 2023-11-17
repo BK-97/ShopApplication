@@ -12,15 +12,12 @@ const ShoppingCart = () => {
       const existingCart = await AsyncStorage.getItem("cart");
       let cart = existingCart ? JSON.parse(existingCart) : [];
 
-      // Filtreleme işlemi ile seçilen öğeyi kaldır
       cart = cart.filter((item) => item.id !== itemId);
 
-      // Güncellenmiş sepeti AsyncStorage'e geri yaz
       await AsyncStorage.setItem("cart", JSON.stringify(cart));
 
       console.log("Item removed from cart. Updated cart:", cart);
 
-      // Güncellenmiş sepeti state'e set et
       setAddedItems(cart);
     } catch (error) {
       console.error("Error removing item from cart:", error);
@@ -28,9 +25,7 @@ const ShoppingCart = () => {
   };
 
   const BuyButton = () => {
-    // Sepeti tamamen temizle
     AsyncStorage.clear();
-    // Güncellenmiş sepeti state'e set et
     setAddedItems([]);
   };
 
@@ -40,16 +35,14 @@ const ShoppingCart = () => {
         const existingCart = await AsyncStorage.getItem("cart");
         const cart = existingCart ? JSON.parse(existingCart) : [];
         
-        // Sepet öğelerini state'e set et
         setAddedItems(cart);
 
-        console.log("Fetched cart items:", cart); // Debug için eklendi
+        console.log("Fetched cart items:", cart);
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
     };
 
-    // Component ilk render olduğunda sepet öğelerini çek
     fetchCartItems();
   }, []);
 
@@ -60,7 +53,7 @@ const ShoppingCart = () => {
       {addedItems.length > 0 ? (
         <FlatList
           data={addedItems}
-          keyExtractor={(item) => item.id.toString()} // keyExtractor'ı düzelt
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.cartItem}>
               <Text style={styles.buttonTextStyle}>{item.stockName}</Text>
@@ -81,7 +74,6 @@ const ShoppingCart = () => {
             <Text style={styles.totalText}>
               Total: {calculateTotal(addedItems)} TL
             </Text>
-            {/* Checkout işlemi buraya eklenebilir */}
             <TouchableOpacity 
               onPress={BuyButton}
               style={styles.checkoutButton} 
