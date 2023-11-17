@@ -1,12 +1,43 @@
 // Subcategories.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import { styles } from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Subcategories = ({ route, navigation }) => {
   const { selectedCategory } = route.params;
   const [subcategories, setSubcategories] = useState([]);
+  const getAllItems = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const items = await AsyncStorage.multiGet(keys);
+  
+      // items dizisi, [key, value] çiftlerini içerir
+      console.log('All items in AsyncStorage:', items);
+    } catch (error) {
+      console.error('Error getting all items from AsyncStorage:', error);
+    }
+  };
+  const addToCart = async (item) => {
+  try {
+    const existingCart = await AsyncStorage.getItem('cart');
+    let cart = existingCart ? JSON.parse(existingCart) : [];
 
+    const isAlreadyAdded = cart.some((cartItem) => cartItem.id === item.id);
+    if (!isAlreadyAdded) {
+      cart.push(item);
+      getAllItems();
+      await AsyncStorage.setItem('cart', JSON.stringify(cart));
+      console.log('Item added to cart:', item);
+    } else {
+      console.log('Item is already in the cart:', item);
+    }
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+  }
+};
+
+  
   const fetchSubcategories = async (parentId) => {
     try {
       const response = await fetch(
@@ -37,7 +68,6 @@ const Subcategories = ({ route, navigation }) => {
     const fetchSubcategoriesAndSet = async () => {
       const subcategories = await fetchSubcategories(selectedCategory.id);
       setSubcategories(subcategories);
-      console.log('Subcategories:', subcategories);
     };
 
     fetchSubcategoriesAndSet();
@@ -45,23 +75,16 @@ const Subcategories = ({ route, navigation }) => {
 
   const handleSubcategoryPress = async (subcategory) => {
     try {
-      // Sepete ekleme işlemini burada yapabilirsiniz.
-      // Örneğin:
-      // await addToCart(subcategory);
-      
-      // Şu anlık sadece bilgiyi gönderiyoruz.
-      navigation.navigate('ShoppingCart', {
-        selectedSubcategory: {
-          id: subcategory.id,
-          name: subcategory.categoryName,
-          price: subcategory.price, // Bu değeri API'den almanız gerekecek
-        },
-      });
+      await addToCart(subcategory);
     } catch (error) {
       console.error('Error adding to cart:', error);
     }
   };
-
+  const handleCartPress = async (subcategory) => {
+    console.log('-----------', JSON.stringify(subcategory));
+    navigation.navigate('Cart', { selectedCategory: subcategory });
+  };
+  
   const renderSubcategoryItem = ({ item }) => (
     <TouchableOpacity style={styles.verticalButton} onPress={() => handleSubcategoryPress(item)}>
       <Image
@@ -94,7 +117,7 @@ const Subcategories = ({ route, navigation }) => {
       <View style={styles.cartContainer}>
         <TouchableOpacity
           style={styles.bottomButton}
-          onPress={() => navigation.navigate('Cart')}
+          onPress={() => handleCartPress(selectedCategory)}
         >
           <Image source={require('../assets/cart.png')} style={styles.icon} />
         </TouchableOpacity>

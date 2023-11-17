@@ -37,7 +37,6 @@ const CategoriesList = () => {
   }, []);
 
   const handleCategoryPress = (category) => {
-    console.log(category);
     navigation.navigate('Products', {
       selectedCategory: category,
     });

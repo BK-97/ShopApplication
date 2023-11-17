@@ -113,4 +113,42 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10, 
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  selectedCategory: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    width: '100%',
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  totalText: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  checkoutButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 8,
+  },
+  checkoutText: {
+    fontSize: 18,
+    color: 'white',
+  },
 });
