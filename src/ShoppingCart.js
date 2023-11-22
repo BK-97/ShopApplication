@@ -56,10 +56,10 @@ const ShoppingCart = () => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.cartItem}>
-              <Text style={styles.buttonTextStyle}>{item.stockName}</Text>
-              <Text style={styles.buttonTextStyle}>{item.price} TL</Text>
+              <Text style={styles.buttonUnderText}>{item.stockName}</Text>
+              <Text style={styles.buttonUnderText}>{item.price} TL</Text>
               <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                <Text style={styles.buttonTextStyle}>Remove from Cart</Text>
+                <Text style={styles.buttonUnderText}>Remove from Cart</Text>
               </TouchableOpacity>
             </View>
           )}

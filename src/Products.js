@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
-import { styles } from './styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
+import { styles } from "./styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Products = ({ route, navigation }) => {
   const { selectedProduct: selectedCategory } = route.params;
@@ -11,106 +11,104 @@ const Products = ({ route, navigation }) => {
     try {
       const keys = await AsyncStorage.getAllKeys();
       const items = await AsyncStorage.multiGet(keys);
-      console.log('All items in AsyncStorage:', items);
+      console.log("All items in AsyncStorage:", items);
     } catch (error) {
-      console.error('Error getting all items from AsyncStorage:', error);
+      console.error("Error getting all items from AsyncStorage:", error);
     }
   };
   const addToCart = async (item) => {
-  try {
-    const existingCart = await AsyncStorage.getItem('cart');
-    let cart = existingCart ? JSON.parse(existingCart) : [];
-
-    const isAlreadyAdded = cart.some((cartItem) => cartItem.id === item.id);
-    if (!isAlreadyAdded) {
-      cart.push(item);
-      getAllItems();
-      await AsyncStorage.setItem('cart', JSON.stringify(cart));
-      console.log('Item added to cart:', item);
-    } else {
-      console.log('Item is already in the cart:', item);
-    }
-  } catch (error) {
-    console.error('Error adding to cart:', error);
-  }
-};
-
-  
-const fetchProducts = async (categoryId) => {
     try {
-        const response = await fetch(
-            `https://apiv5.akilliticaretim.com/api/v5/sf/product/category_products?Id=${categoryId}&PageNumber=1&PageSize=10`,
-            {
-                method: 'GET',
-                headers: {
-                    'GUID': '24BE-DB0E-D75E-4060',
-                },
-            }
-        );
+      const existingCart = await AsyncStorage.getItem("cart");
+      let cart = existingCart ? JSON.parse(existingCart) : [];
 
-        const result = await response.json();
-
-        if (result.status) {
-            const products = result.data;
-
-            if (products) {
-                return products;
-            } else {
-                console.error('Products is undefined');
-                return [];
-            }
-        } else {
-            console.error('API Error:', result);
-            return [];
-        }
+      const isAlreadyAdded = cart.some((cartItem) => cartItem.id === item.id);
+      if (!isAlreadyAdded) {
+        cart.push(item);
+        getAllItems();
+        await AsyncStorage.setItem("cart", JSON.stringify(cart));
+        console.log("Item added to cart:", item);
+      } else {
+        console.log("Item is already in the cart:", item);
+      }
     } catch (error) {
-        console.error('API Error:', error);
-        return [];
+      console.error("Error adding to cart:", error);
     }
-};
+  };
 
-const handleProductPress = async (product) => {
+  const fetchProducts = async (categoryId) => {
+    try {
+      const response = await fetch(
+        `https://apiv5.akilliticaretim.com/api/v5/sf/product/category_products?Id=${categoryId}&PageNumber=1&PageSize=10`,
+        {
+          method: "GET",
+          headers: {
+            GUID: "24BE-DB0E-D75E-4060",
+          },
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.status) {
+        const products = result.data;
+
+        if (products) {
+          return products;
+        } else {
+          console.error("Products is undefined");
+          return [];
+        }
+      } else {
+        console.error("API Error:", result);
+        return [];
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      return [];
+    }
+  };
+
+  const handleProductPress = async (product) => {
     try {
       await addToCart(product);
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error("Error adding to cart:", error);
     }
   };
-  
 
   useEffect(() => {
     const fetchProductsAndSet = async () => {
-        try {
-          const result = await fetchProducts(selectedCategory.id);
-          if (result && result.length > 0) {
-            setProducts(result);
-
-          } else {
-            console.error('No products found.');
-          }
-        } catch (error) {
-          console.error('Error fetching products:', error);
+      try {
+        const result = await fetchProducts(selectedCategory.id);
+        if (result && result.length > 0) {
+          setProducts(result);
+        } else {
+          console.error("No products found.");
         }
-      };
-  
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
     fetchProductsAndSet();
   }, [selectedCategory]);
-  
 
   const handleCartPress = async (subcategory) => {
-    console.log('-----------', JSON.stringify(subcategory));
-    navigation.navigate('Cart', { selectedProduct: subcategory });
+    console.log("-----------", JSON.stringify(subcategory));
+    navigation.navigate("Cart", { selectedProduct: subcategory });
   };
-  
+
   const rednerProductItem = ({ item }) => (
-    
-    <TouchableOpacity style={styles.verticalButton} onPress={() => handleProductPress(item)}>
+    <TouchableOpacity
+      style={styles.verticalButton}
+      onPress={() => handleProductPress(item)}
+    >
       <Image
-       source={{ uri: item.productImages[0].imagePath}}
+        source={{ uri: item.productImages[0].imagePath }}
         style={styles.ImageCategory}
       />
       <View style={styles.buttonUnderTextView}>
-        <Text style={styles.buttonTextStyle}>{item.stockName}</Text>
+        <Text style={styles.buttonUnderText}>{item.stockName}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -120,16 +118,17 @@ const handleProductPress = async (product) => {
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={{
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
           }}
           numColumns={3}
           data={products}
           renderItem={rednerProductItem}
           keyExtractor={(item) =>
-            item.categoryName ? item.categoryName.toString() : Math.random().toString()
+            item.categoryName
+              ? item.categoryName.toString()
+              : Math.random().toString()
           }
-          
         />
       </View>
       {/* Cart */}
@@ -138,7 +137,7 @@ const handleProductPress = async (product) => {
           style={styles.bottomButton}
           onPress={() => handleCartPress(selectedCategory)}
         >
-          <Image source={require('../assets/cart.png')} style={styles.icon} />
+          <Image source={require("../assets/cart.png")} style={styles.icon} />
         </TouchableOpacity>
       </View>
     </View>

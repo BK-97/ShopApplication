@@ -24,6 +24,8 @@ const CategoriesList = () => {
         const result = await response.json();
 
         if (result.status) {
+          console.log(result.data.categories);
+
           setCategories(result.data.categories);
         } else {
           console.error('API Error:', result);
@@ -48,14 +50,14 @@ const CategoriesList = () => {
       style={styles.verticalButton}
       onPress={() => handleCategoryPress(item)}
     >
-      <View style={styles.buttonTextView}>
-        <Text style={styles.buttonTextStyle}>{item.categoryName}</Text>
+      <View style={styles.buttonUnderTextView}>
+        <Text style={styles.buttonUnderText}>{item.categoryName}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       <FlatList
         contentContainerStyle={{  
             justifyContent: 'flex-start',

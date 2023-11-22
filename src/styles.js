@@ -39,6 +39,9 @@ export const styles = StyleSheet.create({
     marginBottom: 80, 
     marginLeft: 10, 
     marginRight: 10, 
+    backgroundColor:"#e8e7e6",
+    borderWidth:1,
+    borderColor:"#d9d9d9"
   },
   verticalContainer: {
     flex:1,
@@ -58,41 +61,42 @@ export const styles = StyleSheet.create({
   horizontalButton: {
     width:600,  /* Shouldnt be like that*/
     height:80,
-    backgroundColor: "pink",
+    backgroundColor: "#d9d9d9",
     justifyContent: "center", 
     alignItems: "flex-start", 
-    marginVertical:4,
+    marginVertical:1,
+    borderWidth:1,
+    borderColor:"#d9d9d9",
   },
   verticalButton: {
     flexDirection:'column', 
-    
     width:100, 
     height:120,
-    backgroundColor: "pink",
+    backgroundColor: "white",
+    borderColor: "grey",
+    borderWidth: 1,
     justifyContent: "center", 
-    alignItems: "flex-end", 
+    alignItems: "center", 
     marginHorizontal:10,
     marginVertical:10,
+    borderRadius:10,
   },
   ImageCategory: {
     aspectRatio:1,
-    width:'90%',
+    width:'70%',
     justifyContent: "center", 
     alignItems: "center", 
-    marginLeft: 10,
   },
   buttonUnderTextView: {
-    width:100,
-    height:20,
-    justifyContent: "center", 
+    width:'100%',
+    height:'30%',
     alignItems: "center", 
-    marginLeft: 10,
   },
-  buttonTextStyle: {
-    fontSize: 16,
+  buttonUnderText: {
+    fontSize: 13,
     fontStyle:"normal",
     color: "black",
-
+    marginHorizontal:2,
   },
   buttonTextView: {
     width:100,
@@ -105,7 +109,7 @@ export const styles = StyleSheet.create({
     bottom: 20, 
     alignSelf: 'center',
   },
-  cartStyle: {
+  cartButton: {
     width: 50, 
     height: 50,
     backgroundColor: 'white',

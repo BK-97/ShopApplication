@@ -7,7 +7,6 @@ import { styles } from './styles';
 const MenuScreen = ({ navigation }) => {
   const handleCategoryPress = (category) => {
     console.log('Seçilen Kategori:', category);
-    // Alt kategori sayfasına yönlendirme işlemleri burada yapılacak
     navigation.navigate('SubCategory', { selectedCategory: category });
   };
 

@@ -1,8 +1,8 @@
 // Subcategories.js
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Image,FlatList,Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { styles } from './styles';
+import React, { useState, useEffect } from "react";
+import { View, TouchableOpacity, Image, FlatList, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { styles } from "./styles";
 
 const Subcategories = () => {
   const navigation = useNavigation();
@@ -12,11 +12,11 @@ const Subcategories = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://apiv5.akilliticaretim.com/api/v5/ad/product/categories?parentId=70',
+          "https://apiv5.akilliticaretim.com/api/v5/ad/product/categories?parentId=70",
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'GUID': '24BE-DB0E-D75E-4060',
+              GUID: "24BE-DB0E-D75E-4060",
             },
           }
         );
@@ -26,42 +26,45 @@ const Subcategories = () => {
         if (result.status) {
           setCategories(result.data.categories);
         } else {
-          console.error('API Error:', result);
+          console.error("API Error:", result);
         }
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
       }
     };
 
     fetchCategories();
   }, []);
   const renderSubcategoryItem = ({ item }) => (
-    <TouchableOpacity style={styles.verticalButton} onPress={() => handleSubCategoryPress(item)}>
+    <TouchableOpacity
+      style={styles.verticalButton}
+      onPress={() => handleSubCategoryPress(item)}
+    >
       <Image
         source={{ uri: item.imagePath.imagePath }}
         style={styles.ImageCategory}
       />
       <View style={styles.buttonUnderTextView}>
-        <Text style={styles.buttonTextStyle}>{item.categoryName}</Text>
+        <Text style={styles.buttonUnderText}>{item.categoryName}</Text>
       </View>
     </TouchableOpacity>
   );
   const menuButton = () => {
-    navigation.navigate('Menu');
+    navigation.navigate("Menu");
   };
 
   const notificationButton = () => {
-    console.log('notificationButton');
+    console.log("notificationButton");
   };
 
   const locationButton = () => {
-    console.log('locationButton');
+    console.log("locationButton");
   };
   const handleSubCategoryPress = (category) => {
-    navigation.navigate('Products', { selectedProduct: category });
+    navigation.navigate("Products", { selectedProduct: category });
   };
   const handleCartPress = () => {
-    navigation.navigate('Cart');
+    navigation.navigate("Cart");
   };
   return (
     <View style={{ flex: 1 }}>
@@ -69,30 +72,38 @@ const Subcategories = () => {
       <View style={styles.upperRow}>
         {/* Menu Button */}
         <TouchableOpacity onPress={menuButton}>
-          <Image source={require('../assets/menuIcon.png')} style={styles.icon} />
+          <Image
+            source={require("../assets/menuIcon.png")}
+            style={styles.icon}
+          />
         </TouchableOpacity>
 
         {/* Logo */}
-        <Image source={require('../assets/Logo.png')} style={styles.logo} />
+        <Image source={require("../assets/Logo.png")} style={styles.logo} />
 
         {/* Location Button */}
         <TouchableOpacity onPress={locationButton}>
-          <Image source={require('../assets/location.png')} style={styles.icon} />
+          <Image
+            source={require("../assets/location.png")}
+            style={styles.icon}
+          />
         </TouchableOpacity>
 
         {/* Notification Button */}
         <TouchableOpacity onPress={notificationButton}>
-          <Image source={require('../assets/notification.png')} style={styles.icon} />
+          <Image
+            source={require("../assets/notification.png")}
+            style={styles.icon}
+          />
         </TouchableOpacity>
       </View>
-      
-    
-      
-      {/* Cart */}
+
+      {/* SubCategoryList */}
+      <View style={styles.container}>
         <FlatList
           contentContainerStyle={{
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
           }}
           numColumns={3}
           data={subcategories}
@@ -101,13 +112,14 @@ const Subcategories = () => {
             item.id ? item.categoryName.toString() : Math.random().toString()
           }
         />
+      </View>
       {/* Cart */}
       <View style={styles.cartContainer}>
         <TouchableOpacity
-          style={styles.bottomButton}
+          style={styles.cartButton}
           onPress={() => handleCartPress()}
         >
-          <Image source={require('../assets/cart.png')} style={styles.icon} />
+          <Image source={require("../assets/cart.png")} style={styles.icon} />
         </TouchableOpacity>
       </View>
     </View>
