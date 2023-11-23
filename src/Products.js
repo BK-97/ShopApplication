@@ -7,33 +7,7 @@ const Products = ({ route, navigation }) => {
   const { selectedProduct: selectedCategory } = route.params;
   const [products, setProducts] = useState([]);
 
-  const getAllItems = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      const items = await AsyncStorage.multiGet(keys);
-      console.log("All items in AsyncStorage:", items);
-    } catch (error) {
-      console.error("Error getting all items from AsyncStorage:", error);
-    }
-  };
-  const addToCart = async (item) => {
-    try {
-      const existingCart = await AsyncStorage.getItem("cart");
-      let cart = existingCart ? JSON.parse(existingCart) : [];
 
-      const isAlreadyAdded = cart.some((cartItem) => cartItem.id === item.id);
-      if (!isAlreadyAdded) {
-        cart.push(item);
-        getAllItems();
-        await AsyncStorage.setItem("cart", JSON.stringify(cart));
-        console.log("Item added to cart:", item);
-      } else {
-        console.log("Item is already in the cart:", item);
-      }
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-    }
-  };
 
   const fetchProducts = async (categoryId) => {
     try {
@@ -67,21 +41,12 @@ const Products = ({ route, navigation }) => {
       return [];
     }
   };
-
-  const handleProductPress = async (product) => {
-    try {
-      await addToCart(product);
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchProductsAndSet = async () => {
       try {
         const result = await fetchProducts(selectedCategory.id);
-        if (result && result.length > 0) {
-          setProducts(result);
+        if (result && result.length > 1) {
+          setProducts(result.slice(1));
         } else {
           console.error("No products found.");
         }
@@ -89,10 +54,44 @@ const Products = ({ route, navigation }) => {
         console.error("Error fetching products:", error);
       }
     };
-
+  
     fetchProductsAndSet();
   }, [selectedCategory]);
+  
+  const getAllItems = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const items = await AsyncStorage.multiGet(keys);
+      console.log("All items in AsyncStorage:", items);
+    } catch (error) {
+      console.error("Error getting all items from AsyncStorage:", error);
+    }
+  };
+  const addToCart = async (item) => {
+    try {
+      const existingCart = await AsyncStorage.getItem("cart");
+      let cart = existingCart ? JSON.parse(existingCart) : [];
 
+      const isAlreadyAdded = cart.some((cartItem) => cartItem.id === item.id);
+      if (!isAlreadyAdded) {
+        cart.push(item);
+        getAllItems();
+        await AsyncStorage.setItem("cart", JSON.stringify(cart));
+        console.log("Item added to cart:", item);
+      } else {
+        console.log("Item is already in the cart:", item);
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
+  const handleProductPress = async (product) => {
+    try {
+      await addToCart(product);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
   const handleCartPress = async (subcategory) => {
     console.log("-----------", JSON.stringify(subcategory));
     navigation.navigate("Cart", { selectedProduct: subcategory });
