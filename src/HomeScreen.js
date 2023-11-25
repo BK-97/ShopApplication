@@ -1,6 +1,6 @@
 // HomeScreen.js
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Image, FlatList, Text } from 'react-native';
+import { View, TouchableOpacity, Image, FlatList, Text, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from './Button';
 import { styles } from './styles';
@@ -53,11 +53,12 @@ const HomeScreen = () => {
   };
 
   const notificationButton = () => {
-    console.log('notificationButton');
+    Alert.alert('Will Be Updated!')
+
   };
 
   const locationButton = () => {
-    console.log('locationButton');
+    Alert.alert('Will Be Updated!')
   };
 
   const handleCategoryPress = (category) => {

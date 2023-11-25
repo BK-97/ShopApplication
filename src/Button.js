@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const CustomButton = ({ onPress, iconSource, style }) => (
   <TouchableOpacity onPress={onPress} style={style}>
-    <Image source={iconSource} style={{ width: 24, height: 24 }} />
+    <Image source={iconSource} style={{ width: '100%', height: '100%' }} />
   </TouchableOpacity>
 );
 

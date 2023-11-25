@@ -59,11 +59,12 @@ const Subcategories = ({ route }) => {
   };
 
   const notificationButton = () => {
-    console.log("notificationButton");
+    Alert.alert('Will Be Updated!')
+
   };
 
   const locationButton = () => {
-    console.log("locationButton");
+    Alert.alert('Will Be Updated!')
   };
 
   const handleSubCategoryPress = (category) => {

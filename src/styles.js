@@ -7,6 +7,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 8,
+    height: 70,
+    width:'100%',
   },
   icon: {
     width: 40,
@@ -14,21 +16,9 @@ export const styles = StyleSheet.create({
   },
   logo: {
     width: 100,
-    height: 50,
-  },
-  upperRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 8,
-  },
-  icon: {
-    width: 40,
-    height: 40,
-  },
-  logo: {
-    width: 100,
-    height: 50,
+    height:50,
+    borderWidth:1,
+    borderRadius:5,
   },
   container: {
     flex:1,
@@ -92,6 +82,13 @@ export const styles = StyleSheet.create({
     height:'30%',
     alignItems: "center", 
   },
+  cartTextView: {
+    width:100,
+    height:'100%',
+    alignItems: "center", 
+    justifyContent: "center", 
+
+  },
   buttonUnderText: {
     fontSize: 13,
     fontStyle:"normal",
@@ -117,24 +114,35 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10, 
   },
+  cartRemoveButton: {
+    width: 100, 
+    height: 50,
+    backgroundColor: '#f71e0f',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10, 
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    marginLeft:20,
   },
   selectedCategory: {
     fontSize: 18,
     marginBottom: 10,
   },
   cartItem: {
+    flex:1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 50,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     width: '100%',
+
   },
   bottomContainer: {
     position: 'absolute',

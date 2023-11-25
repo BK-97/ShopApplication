@@ -1,6 +1,12 @@
 // ShoppingCart.js
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "./styles";
 
@@ -34,10 +40,8 @@ const ShoppingCart = () => {
       try {
         const existingCart = await AsyncStorage.getItem("cart");
         const cart = existingCart ? JSON.parse(existingCart) : [];
-        
-        setAddedItems(cart);
 
-        console.log("Fetched cart items:", cart);
+        setAddedItems(cart);
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
@@ -48,24 +52,33 @@ const ShoppingCart = () => {
 
   return (
     <View style={styles.container}>
+      {/* Title */}
       <Text style={styles.title}>Shopping Cart</Text>
-
+      {/* FlatList */}
       {addedItems.length > 0 ? (
         <FlatList
           data={addedItems}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.cartItem}>
-              <Text style={styles.buttonUnderText}>{item.stockName}</Text>
-              <Text style={styles.buttonUnderText}>{item.price} TL</Text>
-              <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                <Text style={styles.buttonUnderText}>Remove from Cart</Text>
+              <View style={styles.cartTextView}>
+                <Text style={styles.buttonUnderText}>{item.stockName}</Text>
+              </View>
+              <View style={styles.cartTextView}>
+                <Text style={styles.buttonUnderText}>{item.price} TL</Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.cartRemoveButton}
+                onPress={() => removeFromCart(item.id)}
+              >
+                <Text style={styles.buttonUnderText}>Remove</Text>
               </TouchableOpacity>
             </View>
           )}
         />
       ) : (
-        <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+        <Text>Your cart is empty.</Text>
       )}
 
       <View style={styles.bottomContainer}>
@@ -74,10 +87,7 @@ const ShoppingCart = () => {
             <Text style={styles.totalText}>
               Total: {calculateTotal(addedItems)} TL
             </Text>
-            <TouchableOpacity 
-              onPress={BuyButton}
-              style={styles.checkoutButton} 
-            >
+            <TouchableOpacity onPress={BuyButton} style={styles.checkoutButton}>
               <Text style={styles.checkoutText}>Checkout</Text>
             </TouchableOpacity>
           </>

@@ -26,6 +26,7 @@ const Products = ({ route, navigation }) => {
       if (result.status) {
         const products = result.data;
 
+        console.log(result.data);
         if (products) {
           return products;
         } else {
@@ -45,6 +46,7 @@ const Products = ({ route, navigation }) => {
     const fetchProductsAndSet = async () => {
       try {
         const result = await fetchProducts(selectedCategory.id);
+        console.log(selectedCategory.id);
         if (result && result.length > 1) {
           setProducts(result.slice(1));
         } else {
@@ -93,7 +95,6 @@ const Products = ({ route, navigation }) => {
     }
   };
   const handleCartPress = async (subcategory) => {
-    console.log("-----------", JSON.stringify(subcategory));
     navigation.navigate("Cart", { selectedProduct: subcategory });
   };
 
@@ -114,6 +115,7 @@ const Products = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      {/* FlatList */}
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={{
