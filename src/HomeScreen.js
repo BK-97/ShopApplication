@@ -61,6 +61,8 @@ const HomeScreen = () => {
   };
 
   const handleCategoryPress = (category) => {
+    console.log('Seçilen Kategori:', category);
+
     navigation.navigate('SubCategory', {
       selectedSubcategory: category,
     });
